@@ -18,3 +18,4 @@ make test_memory
 ## TODO
 
 - Agregar `ae` (address enable) a `memory` para utilizar el mismo bus para direcciones y datos.
+- Arreglar shift right arithmetic.
