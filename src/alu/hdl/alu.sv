@@ -12,15 +12,14 @@ typedef enum {
   EQUAL
 } opcode;
 
-module alu (a, b, out, op);
-
-parameter longint WORD_SIZE = 16;
-
-input logic [WORD_SIZE-1:0] a;
-input logic [WORD_SIZE-1:0] b;
-output logic [WORD_SIZE-1:0] out;
-
-input opcode op;
+module alu #(
+    parameter longint WORD_SIZE = 16
+)(
+    input logic [WORD_SIZE-1:0] a,
+    input logic [WORD_SIZE-1:0] b,
+    output logic [WORD_SIZE-1:0] out,
+    input opcode op
+);
 
 always_comb begin
     case (op)
