@@ -15,9 +15,9 @@ typedef enum {
 module alu #(
     parameter longint WORD_SIZE = 16
 )(
-    input logic [WORD_SIZE-1:0] a,
-    input logic [WORD_SIZE-1:0] b,
-    output logic [WORD_SIZE-1:0] out,
+    input [WORD_SIZE-1:0] a,
+    input [WORD_SIZE-1:0] b,
+    output reg [WORD_SIZE-1:0] out, // TODO: reg o logic?
     input opcode op
 );
 
