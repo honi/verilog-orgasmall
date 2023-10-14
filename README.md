@@ -14,3 +14,7 @@ En este repo estoy aprendiendo Verilog e intentando armar un CPU muy básico.
 ```sh
 make test_memory
 ```
+
+## TODO
+
+- Agregar `ae` (address enable) a `memory` para utilizar el mismo bus para direcciones y datos.

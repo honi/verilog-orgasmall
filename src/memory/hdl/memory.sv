@@ -2,7 +2,7 @@
 
 module memory (data_in, data_out, addr, we, oe, rst, clk);
 
-// Tipos usados para los parámetros limitan las opciones de configuración?
+// TODO: Tipos usados para los parámetros limitan las opciones de configuración?
 parameter longint WORD_SIZE = 16;
 parameter longint ADDR_SIZE = 16;
 localparam longint MAX_ADDR = (1 << ADDR_SIZE) - 1;
