@@ -1,5 +1,3 @@
-`timescale 1us/1us
-
 module memory #(
     // TODO: Tipos usados para los parámetros limitan las opciones de configuración?
     parameter longint WORD_SIZE = 16,
@@ -7,7 +5,7 @@ module memory #(
     localparam longint MAX_ADDR = (1 << ADDR_SIZE) - 1
 )(
     input [WORD_SIZE-1:0] data_in,
-    output [WORD_SIZE-1:0] data_out,
+    output reg [WORD_SIZE-1:0] data_out,
     input [ADDR_SIZE-1:0] addr,
     input we, // write enable
     input oe, // output enable
@@ -21,14 +19,14 @@ always_ff @ (posedge clk or posedge rst) begin
     longint i;
     if (rst) begin
         for (i = 0; i < MAX_ADDR; i = i + 1) begin
-            ram[i] <= '0; // {(WORD_SIZE){1'b0}}
+            ram[i] <= '0;
         end
+        data_out <= 'z;
     end else begin
         if (we) ram[addr] <= data_in;
+        data_out <= (oe & !we) ? ram[addr] : 'z;
     end
 end
-
-assign data_out = (oe & !we) ? ram[addr] : 'z; // {(WORD_SIZE){1'bz}}
 
 `ifdef COCOTB_SIM
 initial begin

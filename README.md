@@ -20,3 +20,4 @@ make test_memory
 - Agregar `ae` (address enable) a `memory` para utilizar el mismo bus para direcciones y datos.
 - Arreglar shift right arithmetic.
 - Si quiero hacer un cpu single-cycle necesito si o si 2 memorias separadas (programa y datos), o una memoria dual port (2 lecturas simultáneas)?
+- Mantener el clock entre distintos test cases.
