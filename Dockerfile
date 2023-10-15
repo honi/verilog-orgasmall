@@ -5,6 +5,7 @@ RUN apt update && \
 
 RUN apt install -y iverilog gtkwave
 
-RUN pip install --break-system-packages cocotb pytest
+COPY requirements.txt /tmp/
+RUN pip install --break-system-packages -r /tmp/requirements.txt
 
 WORKDIR /workspace
