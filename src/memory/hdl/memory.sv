@@ -18,7 +18,7 @@ reg [WORD_SIZE-1:0] data [0:MAX_ADDR];
 always_ff @ (posedge clk or posedge rst) begin
     longint i;
     if (rst) begin
-        for (i = 0; i < MAX_ADDR; i = i + 1) begin
+        for (i = 0; i <= MAX_ADDR; i = i + 1) begin
             data[i] <= '0;
         end
         data_out <= 'z;
