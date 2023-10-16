@@ -1,6 +1,6 @@
 import random
 import cocotb
-from cocotb.triggers import RisingEdge, Timer
+from cocotb.triggers import RisingEdge, FallingEdge, Timer
 from cocotb.clock import Clock
 from cocotb.types import LogicArray, Range
 
@@ -17,8 +17,7 @@ async def memory_basic_test(dut):
     # Estado inicial.
     dut.data_in.value = 0
     dut.addr.value = 0
-    dut.we.value = 0
-    dut.oe.value = 0
+    dut.en_write.value = 0
     dut.rst.value = 0
 
     # Configuramos el clock y nos sincronizamos.
@@ -36,22 +35,16 @@ async def memory_basic_test(dut):
     await RisingEdge(dut.clk)
 
     # Testeamos escribir y leer varios datos al azar.
-    expected_value = Z
     for _ in range(10):
         data = random.randint(0, 2**WORD_SIZE)
         addr = random.randint(0, 2**ADDR_SIZE)
 
-        dut.we.value = 1
-        dut.oe.value = 0
         dut.data_in.value = data
         dut.addr.value = addr
+        dut.en_write.value = 1
+
+        # TODO: Revisar alternativa para el doble RisingEdge.
+        await RisingEdge(dut.clk)
         await RisingEdge(dut.clk)
 
-        # TODO: Revisar si está bien hacer el assert acá.
-        assert LogicArray(dut.data_out.value) == expected_value
-        expected_value = LogicArray(data, Range(WORD_SIZE-1, 'downto', 0))
-
-        dut.we.value = 0
-        dut.oe.value = 1
-        dut.addr.value = addr
-        await RisingEdge(dut.clk)
+        assert dut.data_out.value == data

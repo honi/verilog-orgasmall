@@ -22,3 +22,4 @@ make test_memory
 - Si quiero hacer un cpu single-cycle necesito si o si 2 memorias separadas (programa y datos), o una memoria dual port (2 lecturas simultáneas)?
 - Mantener el clock entre distintos test cases.
 - Compartir parámetros defaults como `WORD_SIZE`.
+- Tipos usados para los parámetros limitan las opciones de configuración?
