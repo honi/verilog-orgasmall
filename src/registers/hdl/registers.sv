@@ -17,8 +17,6 @@ module registers #(
 );
 
 reg [WORD_SIZE-1:0] data [0:COUNT-1];
-reg [WORD_SIZE-1:0] reg_a;
-reg [WORD_SIZE-1:0] reg_b;
 
 always_ff @ (posedge clk or posedge rst) begin
     longint i;
@@ -29,12 +27,10 @@ always_ff @ (posedge clk or posedge rst) begin
     end else begin
         if (en_write) data[idx_write] <= data_in;
     end
-    reg_a <= data[idx_out_a];
-    reg_b <= data[idx_out_b];
 end
 
-assign data_out_a = reg_a;
-assign data_out_b = reg_b;
+assign data_out_a = data[idx_out_a];
+assign data_out_b = data[idx_out_b];
 
 `ifdef COCOTB_SIM
 initial begin

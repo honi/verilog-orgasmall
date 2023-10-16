@@ -53,18 +53,9 @@ async def registers_basic_test(dut):
     await RisingEdge(dut.clk)
 
     # Leemos todos los registros de a 2.
-    expected_a = DATA_X
-    expected_b = DATA_X
     for i in range(0, COUNT, 2):
         dut.idx_out_a.value = i
         dut.idx_out_b.value = i + 1
         await RisingEdge(dut.clk)
-        assert LogicArray(dut.data_out_a.value) == expected_a
-        assert LogicArray(dut.data_out_b.value) == expected_b
-        expected_a = LogicArray(100 + i, Range(WORD_SIZE-1, 'downto', 0))
-        expected_b = LogicArray(100 + i + 1, Range(WORD_SIZE-1, 'downto', 0))
-
-    # Verificamos los últimos 2 valores.
-    await RisingEdge(dut.clk)
-    assert LogicArray(dut.data_out_a.value) == expected_a
-    assert LogicArray(dut.data_out_b.value) == expected_b
+        assert dut.data_out_a.value == 100 + i
+        assert dut.data_out_b.value == 100 + i + 1
