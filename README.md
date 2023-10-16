@@ -21,3 +21,4 @@ make test_memory
 - Arreglar shift right arithmetic.
 - Si quiero hacer un cpu single-cycle necesito si o si 2 memorias separadas (programa y datos), o una memoria dual port (2 lecturas simultáneas)?
 - Mantener el clock entre distintos test cases.
+- Compartir parámetros defaults como `WORD_SIZE`.
