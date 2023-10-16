@@ -1,10 +1,11 @@
-test_memory:
-	./scripts/shell make -C src/memory/tests
+MODULES := $(patsubst src/%,%,$(shell find src -type d -depth 1))
 
-test_registers:
-	./scripts/shell make -C src/registers/tests
+all: $(MODULES)
 
-test_alu:
-	./scripts/shell make -C src/alu/tests
+$(MODULES):
+	./scripts/shell make -C src/$@/tests
 
-.PHONY: clean test_memory test_registers test_alu
+clean:
+	find src -name "*.vcd" -o -name "results.xml" -o -name "sim_build" -o -name "__pycache__" | xargs rm -r
+
+.PHONY: all clean $(MODULES)
