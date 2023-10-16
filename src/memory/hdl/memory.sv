@@ -13,18 +13,18 @@ module memory #(
     input clk
 );
 
-reg [WORD_SIZE-1:0] ram [0:MAX_ADDR];
+reg [WORD_SIZE-1:0] data [0:MAX_ADDR];
 
 always_ff @ (posedge clk or posedge rst) begin
     longint i;
     if (rst) begin
         for (i = 0; i < MAX_ADDR; i = i + 1) begin
-            ram[i] <= '0;
+            data[i] <= '0;
         end
         data_out <= 'z;
     end else begin
-        if (we) ram[addr] <= data_in;
-        data_out <= (oe & !we) ? ram[addr] : 'z;
+        if (we) data[addr] <= data_in;
+        data_out <= (oe & !we) ? data[addr] : 'z;
     end
 end
 

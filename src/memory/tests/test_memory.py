@@ -43,8 +43,8 @@ async def memory_basic_test(dut):
 
         dut.we.value = 1
         dut.oe.value = 0
-        dut.addr.value = addr
         dut.data_in.value = data
+        dut.addr.value = addr
         await RisingEdge(dut.clk)
 
         # TODO: Revisar si está bien hacer el assert acá.
