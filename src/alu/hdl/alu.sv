@@ -17,7 +17,7 @@ module alu #(
 )(
     input [WORD_SIZE-1:0] a,
     input [WORD_SIZE-1:0] b,
-    output reg [WORD_SIZE-1:0] out, // TODO: reg o logic?
+    output logic [WORD_SIZE-1:0] out, // TODO: reg o logic?
     input opcode op
 );
 
