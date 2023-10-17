@@ -2,8 +2,11 @@
 `define CONFIG_SV
 
 `define WORD_SIZE 8
+`define INST_SIZE (`WORD_SIZE * 2)
+`define ADDR_SIZE 8
 `define OPCODE_BITS 5
 `define REGISTER_BITS 3
+`define NUM_REGISTERS (1 << `REGISTER_BITS)
 `define IMM_BITS 8
 
 typedef enum bit[`OPCODE_BITS-1:0] {
