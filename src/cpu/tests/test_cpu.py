@@ -7,7 +7,7 @@ from cocotb.types import LogicArray, Range
 
 def assign_memory(target, data):
     for i, d in enumerate(data):
-        target[i] = d
+        target[i].value = d
 
 def encode_inc(rx):
     return ((0b11000 << 3) | rx) << 8
