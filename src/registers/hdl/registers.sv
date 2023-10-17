@@ -18,8 +18,9 @@ module registers #(
 
 reg [WORD_SIZE-1:0] data [0:COUNT-1];
 
+longint i;
+
 always_ff @ (posedge clk or posedge rst) begin
-    longint i;
     if (rst) begin
         for (i = 0; i < COUNT; i = i + 1) begin
             data[i] <= '0;
@@ -37,6 +38,8 @@ initial begin
     $dumpfile("dump.vcd");
     $dumpvars(0, registers);
 end
+genvar k;
+for (k = 0; k < COUNT; k = k + 1) initial $dumpvars(0, data[k]);
 `endif
 
 endmodule
