@@ -18,6 +18,7 @@ En este repo estoy aprendiendo Verilog e intentando armar un CPU muy básico.
 
 - memory
 - registers
+- decoder
 - alu
 - cpu
 
@@ -39,8 +40,6 @@ Luego de correr los tests, el wavefile se genera en `src/<module>/tests/dump.vcd
 
 ## Notas
 
-- Agregar `ae` (address enable) a `memory` para utilizar el mismo bus para direcciones y datos.
-- Arreglar shift right arithmetic.
 - Si quiero hacer un cpu single-cycle necesito si o si 2 memorias separadas (programa y datos), o una memoria dual port (2 lecturas simultáneas)?
 - Mantener el clock entre distintos test cases.
 - Compartir parámetros defaults como `WORD_SIZE`.
