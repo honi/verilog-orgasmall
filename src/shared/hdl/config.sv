@@ -1,3 +1,6 @@
+`ifndef CONFIG_SV
+`define CONFIG_SV
+
 `define WORD_SIZE 8
 `define OPCODE_BITS 5
 `define REGISTER_BITS 3
@@ -26,3 +29,5 @@ typedef enum bit[`OPCODE_BITS-1:0] {
     SHL   = `OPCODE_BITS'b11011, // SHL Rx, t
     SET   = `OPCODE_BITS'b11111  // SET Rx, M
 } opcode_t;
+
+`endif

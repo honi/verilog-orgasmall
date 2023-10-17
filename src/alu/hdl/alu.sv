@@ -1,16 +1,4 @@
-`timescale 1us/1us
-
-typedef enum {
-  ADD,
-  SUB,
-  LEFT_SHIFT,
-  RIGHT_SHIFT_ARITHMETIC,
-  RIGHT_SHIFT_LOGIC,
-  AND,
-  OR,
-  XOR,
-  EQUAL
-} opcode;
+`include "../../shared/hdl/config.sv"
 
 module alu #(
     parameter longint WORD_SIZE = 16
@@ -18,20 +6,22 @@ module alu #(
     input [WORD_SIZE-1:0] a,
     input [WORD_SIZE-1:0] b,
     output logic [WORD_SIZE-1:0] out, // TODO: reg o logic?
-    input opcode op
+    input opcode_t opcode
 );
 
 always_comb begin
-    case (op)
+    case (opcode)
         ADD: out = a + b;
+        ADC: out = a + b;
         SUB: out = a - b;
-        LEFT_SHIFT: out = a << b;
-        RIGHT_SHIFT_ARITHMETIC: out = a >> b; // TODO
-        RIGHT_SHIFT_LOGIC: out = a >> b;
         AND: out = a & b;
         OR: out = a | b;
         XOR: out = a ^ b;
-        EQUAL: out = (a == b) ? 1'b1 : 1'b0;
+        CMP: out = (a == b) ? 1'b1 : 1'b0;
+        INC: out = a + 1;
+        DEC: out = a - 1;
+        SHR: out = a >> b;
+        SHL: out = a << b;
         default: out = '0;
     endcase
 end
