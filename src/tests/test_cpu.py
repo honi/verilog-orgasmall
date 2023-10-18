@@ -25,7 +25,8 @@ async def run_program(dut, program):
 
     # Single-cycle for the win!
     # Necesitamos len(program) ciclos para ejecutar todo el programa.
-    await ClockCycles(dut.clk, len(program))
+    # TODO: Sumamos 1 ciclo más en caso de que la última instrucción sea un store a memoria?
+    await ClockCycles(dut.clk, len(program) + 1)
 
 
 async def test_op(dut, opcode, *operands):
@@ -91,6 +92,18 @@ async def test_set(dut):
     ])
     for i in range(NUM_REGISTERS):
         assert dut.registers.data[i].value == 100 + i
+
+@cocotb.test()
+async def test_load_store(dut):
+    addr = 0x0F
+    data = 42
+    await run_program(dut, [
+        encode(SET, rx=1, imm=data),
+        encode(STR, rx=1, imm=addr),
+        encode(LOAD, rx=2, imm=addr),
+    ])
+    assert dut.data_memory.data[addr].value == data
+    assert dut.registers.data[2].value == data
 
 
 if __name__ == "__main__":
