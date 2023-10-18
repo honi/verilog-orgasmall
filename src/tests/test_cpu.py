@@ -9,13 +9,12 @@ from runner import test_module
 
 async def run_program(dut, program):
     # Cargamos el programa en memoria.
-    for addr, inst in enumerate(program):
-        dut.inst_memory.data[addr].value = inst
+    for addr in range (1 << ADDR_SIZE):
+        dut.inst_memory.data[addr].value = program[addr] if addr < len(program) else 0
 
     # Configuramos el clock y nos sincronizamos.
     clock = Clock(dut.clk, 10, "us")
     cocotb.start_soon(clock.start(start_high=False))
-    await RisingEdge(dut.clk)
 
     # Reset cycle.
     dut.rst.value = 1
@@ -26,7 +25,7 @@ async def run_program(dut, program):
     # Single-cycle for the win!
     # Necesitamos len(program) ciclos para ejecutar todo el programa.
     # TODO: Sumamos 1 ciclo más en caso de que la última instrucción sea un store a memoria?
-    await ClockCycles(dut.clk, len(program) + 1)
+    await ClockCycles(dut.clk, len(program))
 
 
 async def test_op(dut, opcode, *operands):
@@ -94,7 +93,7 @@ async def test_set(dut):
         assert dut.registers.data[i].value == 100 + i
 
 @cocotb.test()
-async def test_load_store(dut):
+async def test_load_store_imm(dut):
     addr = 0x0F
     data = 42
     await run_program(dut, [
@@ -104,6 +103,19 @@ async def test_load_store(dut):
     ])
     assert dut.data_memory.data[addr].value == data
     assert dut.registers.data[2].value == data
+
+@cocotb.test()
+async def test_load_store_reg(dut):
+    addr = 0x0F
+    data = 42
+    await run_program(dut, [
+        encode(SET, rx=1, imm=data),
+        encode(SET, rx=2, imm=addr),
+        encode(RSTR, rx=2, ry=1),
+        encode(RLOAD, rx=3, ry=2),
+    ])
+    assert dut.data_memory.data[addr].value == data
+    assert dut.registers.data[3].value == data
 
 
 if __name__ == "__main__":

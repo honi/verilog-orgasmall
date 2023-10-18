@@ -19,11 +19,11 @@ wire [`REGISTER_BITS-1:0] idx_rx;
 wire [`REGISTER_BITS-1:0] idx_ry;
 
 // Cables para interconectar los componentes.
-wire [`WORD_SIZE-1:0] data_rx;
-wire [`WORD_SIZE-1:0] data_ry;
-wire [`WORD_SIZE-1:0] data_imm;
-wire [`WORD_SIZE-1:0] data_alu_out;
-wire [`WORD_SIZE-1:0] data_memory_data_out;
+wire [`WORD_SIZE-1:0] rx;
+wire [`WORD_SIZE-1:0] ry;
+wire [`WORD_SIZE-1:0] imm;
+wire [`WORD_SIZE-1:0] alu_out;
+wire [`WORD_SIZE-1:0] data_memory_out;
 reg [`WORD_SIZE-1:0] registers_data_in;
 reg [`REGISTER_BITS-1:0] registers_idx_write;
 reg [`WORD_SIZE-1:0] data_memory_data_in;
@@ -48,7 +48,7 @@ memory #(
     .ADDR_SIZE(`ADDR_SIZE)
 ) data_memory (
     .data_in(data_memory_data_in),
-    .data_out(data_memory_data_out),
+    .data_out(data_memory_out),
     .addr(data_memory_addr),
     .en_write(data_memory_en_write),
     .clk(clk)
@@ -60,7 +60,7 @@ decoder decoder (
     .opcode(opcode),
     .rx(idx_rx),
     .ry(idx_ry),
-    .imm(data_imm)
+    .imm(imm)
 );
 
 // Registers: banco de registros.
@@ -71,8 +71,8 @@ registers #(
     .data_in(registers_data_in),
     .idx_write(registers_idx_write),
     .en_write(registers_en_write),
-    .data_out_a(data_rx),
-    .data_out_b(data_ry),
+    .data_out_a(rx),
+    .data_out_b(ry),
     .idx_out_a(idx_rx),
     .idx_out_b(idx_ry),
     .rst(rst),
@@ -83,9 +83,9 @@ registers #(
 alu #(
     .WORD_SIZE(`WORD_SIZE)
 ) alu (
-    .a(data_rx),
-    .b(data_ry),
-    .out(data_alu_out),
+    .a(rx),
+    .b(ry),
+    .out(alu_out),
     .opcode(opcode)
 );
 
@@ -112,9 +112,9 @@ always_comb begin
     case (opcode)
         // ALU ops
         ADD, ADC, SUB, AND, OR, XOR, CMP, MOV, INC, DEC, SHR, SHL: begin
-            registers_en_write = 1;
+            registers_data_in = alu_out;
             registers_idx_write = idx_rx;
-            registers_data_in = data_alu_out;
+            registers_en_write = 1;
         end
 
         // Jumps
@@ -122,23 +122,32 @@ always_comb begin
         end
 
         // Load/Store ops
-        SET: begin
-            registers_en_write = 1;
+        SET: begin // Rx <- M
+            registers_data_in = imm;
             registers_idx_write = idx_rx;
-            registers_data_in = data_imm;
+            registers_en_write = 1;
         end
-        STR: begin
+        STR: begin // Mem[M] <- Rx
+            data_memory_data_in = rx;
+            data_memory_addr = imm;
             data_memory_en_write = 1;
-            data_memory_addr = data_imm;
-            data_memory_data_in = data_rx;
         end
-        LOAD: begin
-            registers_en_write = 1;
+        LOAD: begin // Rx <- Mem[M]
+            data_memory_addr = imm;
+            registers_data_in = data_memory_out;
             registers_idx_write = idx_rx;
-            registers_data_in = data_memory_data_out;
-            data_memory_addr = data_imm;
+            registers_en_write = 1;
         end
-        RSTR, RLOAD: begin
+        RSTR: begin // Mem[Rx] <- Ry
+            data_memory_data_in = ry;
+            data_memory_addr = rx;
+            data_memory_en_write = 1;
+        end
+        RLOAD: begin // Rx <- Mem[Ry]
+            data_memory_addr = ry;
+            registers_data_in = data_memory_out;
+            registers_idx_write = idx_rx;
+            registers_en_write = 1;
         end
     endcase
 end

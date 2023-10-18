@@ -1,0 +1,44 @@
+[*]
+[*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
+[*] Wed Oct 18 19:25:21 2023
+[*]
+[dumpfile] "/Users/jb/Code/uba/verilog/build/cpu/dump.vcd"
+[dumpfile_mtime] "Wed Oct 18 19:24:32 2023"
+[dumpfile_size] 16549
+[savefile] "/Users/jb/Code/uba/verilog/src/cpu.gtkw"
+[timestart] 0
+[size] 1920 1027
+[pos] -1 -1
+*-5.122247 10 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] cpu.
+[sst_width] 262
+[signals_width] 310
+[sst_expanded] 1
+[sst_vpaned_height] 309
+@29
+cpu.clk
+@28
+cpu.rst
+@24
+cpu.pc[7:0]
+@2028
+^1 /Users/jb/Code/uba/verilog/src/opcodes.gtkw
+cpu.opcode[4:0]
+@24
+cpu.idx_rx[2:0]
+cpu.idx_ry[2:0]
+cpu.imm[7:0]
+cpu.rx[7:0]
+cpu.ry[7:0]
+cpu.registers_data_in[7:0]
+cpu.registers_idx_write[2:0]
+@28
+cpu.registers_en_write
+@24
+cpu.data_memory_data_in[7:0]
+@22
+cpu.data_memory_addr[7:0]
+@28
+cpu.data_memory_en_write
+[pattern_trace] 1
+[pattern_trace] 0
