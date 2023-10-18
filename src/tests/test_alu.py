@@ -22,7 +22,19 @@ async def test_add(dut):
 
 @cocotb.test()
 async def test_adc(dut):
-    await test_op(dut, ADC, 1, 2)
+    dut.a.value = 0xFF
+    dut.b.value = 1
+    dut.opcode.value = ADD
+    await Timer(10, "us")
+    assert dut.out.value == 0
+    assert dut.flag_c == 1
+
+    dut.a.value = 1
+    dut.b.value = 1
+    dut.opcode.value = ADC
+    await Timer(10, "us")
+    assert dut.out.value == 3
+    assert dut.flag_c == 0
 
 @cocotb.test()
 async def test_sub(dut):
@@ -61,6 +73,39 @@ async def test_shr(dut):
 @cocotb.test()
 async def test_shl(dut):
     await test_op(dut, SHL, 8, 2)
+
+@cocotb.test()
+async def test_flag_c(dut):
+    await test_op(dut, ADD, 0, 1)
+    assert dut.flag_c == 0
+
+    dut.a.value = 0xFF
+    dut.b.value = 1
+    dut.opcode.value = ADD
+    await Timer(10, "us")
+    assert dut.out.value == 0
+    assert dut.flag_c == 1
+
+    dut.a.value = 0
+    dut.b.value = 1
+    dut.opcode.value = SUB
+    await Timer(10, "us")
+    assert dut.out.value == 0xFF
+    assert dut.flag_c == 1
+
+@cocotb.test()
+async def test_flag_z(dut):
+    await test_op(dut, ADD, 1, 1)
+    assert dut.flag_z == 0
+    await test_op(dut, ADD, -1, 1)
+    assert dut.flag_z == 1
+
+@cocotb.test()
+async def test_flag_n(dut):
+    await test_op(dut, SUB, 1, 1)
+    assert dut.flag_n == 0
+    await test_op(dut, SUB, 4, 8)
+    assert dut.flag_n == 1
 
 
 if __name__ == "__main__":

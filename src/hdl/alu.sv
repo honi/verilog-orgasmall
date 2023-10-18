@@ -3,27 +3,38 @@
 module alu #(
     parameter longint WORD_SIZE = `WORD_SIZE
 )(
+    input opcode_t opcode,
     input [WORD_SIZE-1:0] a,
     input [WORD_SIZE-1:0] b,
     output logic [WORD_SIZE-1:0] out, // TODO: reg o logic?
-    input opcode_t opcode
+    output logic flag_c,
+    output logic flag_z,
+    output logic flag_n
 );
 
 always_comb begin
     case (opcode)
-        ADD: out = a + b;
-        ADC: out = a + b;
-        SUB: out = a - b;
+        ADD: {flag_c, out} = a + b;
+        ADC: {flag_c, out} = a + b + flag_c;
+        SUB: {flag_c, out} = a - b;
         AND: out = a & b;
         OR: out = a | b;
         XOR: out = a ^ b;
-        CMP: out = (a == b) ? 1'b1 : 1'b0;
+        CMP: out = a == b;
         INC: out = a + 1;
         DEC: out = a - 1;
         SHR: out = a >> b;
         SHL: out = a << b;
-        default: out = '0;
+        default: begin
+            out = 0;
+            flag_c = 0;
+        end
     endcase
+    case (opcode)
+        AND, OR, XOR, CMP, INC, DEC, SHR, SHL: flag_c = 0;
+    endcase
+    flag_z = out == 0;
+    flag_n = out[WORD_SIZE-1] == 1;
 end
 
 `ifdef SIM_ALU
