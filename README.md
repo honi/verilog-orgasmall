@@ -18,7 +18,7 @@ En este repo estoy aprendiendo Verilog e intentando armar un CPU muy básico.
 
 - `./src/hdl/<module>.sv`: Módulos en SystemVerilog.
 - `./src/tests/test_<module>.py`: Testbench para `<module>`.
-- `./src/build/<module>/`: Output de la simulación. El archivo interesante es `<module>.vcd` que contiene el wavefile.
+- `./src/build/<module>/`: Output de la simulación. El archivo interesante es `dump.vcd` que contiene el wavefile.
 
 ## Testbenchs
 

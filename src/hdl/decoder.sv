@@ -22,9 +22,9 @@ assign rx = inst[RX_START:RX_END];
 assign ry = inst[RY_START:RY_END];
 assign imm = inst[IMM_START:IMM_END];
 
-`ifdef COCOTB_SIM
+`ifdef SIM_DECODER
 initial begin
-    $dumpfile("decoder.vcd");
+    $dumpfile("dump.vcd");
     $dumpvars(0, decoder);
 end
 `endif

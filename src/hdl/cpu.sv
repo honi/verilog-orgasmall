@@ -36,15 +36,13 @@ memory #(
     .data_in(0),
     .data_out(inst),
     .addr(pc),
-    .en_write(1'b0), // never write
-    .rst(1'b0),
+    .en_write(1'b0), // Nunca escribimos en la memoria de instrucciones.
+    .rst(1'b0), // TODO: Si reseteamos hay que tener cuidado de cuándo cargamos el programa.
     .clk(clk)
 );
 
 decoder decoder (
-    .inst_hi(inst[`INST_SIZE-1:`WORD_SIZE]),
-    .inst_lo(inst[`WORD_SIZE-1:0]),
-    // .inst(inst),
+    .inst(inst),
     .opcode(opcode),
     .rx(idx_rx),
     .ry(idx_ry),
@@ -111,9 +109,9 @@ always_comb begin
     endcase
 end
 
-`ifdef COCOTB_SIM
+`ifdef SIM_CPU
 initial begin
-    $dumpfile("cpu.vcd");
+    $dumpfile("dump.vcd");
     $dumpvars(0, cpu);
 end
 `endif

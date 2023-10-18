@@ -35,13 +35,13 @@ end
 assign data_out_a = data[idx_out_a];
 assign data_out_b = data[idx_out_b];
 
-`ifdef COCOTB_SIM
+`ifdef SIM_REGISTERS
 initial begin
-    $dumpfile("registers.vcd");
+    $dumpfile("dump.vcd");
     $dumpvars(0, registers);
 end
-genvar k;
-for (k = 0; k < COUNT; k = k + 1) initial $dumpvars(0, data[k]);
+// genvar k;
+// for (k = 0; k < COUNT; k = k + 1) initial $dumpvars(0, data[k]);
 `endif
 
 endmodule

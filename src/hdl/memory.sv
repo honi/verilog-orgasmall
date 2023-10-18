@@ -28,9 +28,9 @@ end
 
 assign data_out = data[addr];
 
-`ifdef COCOTB_SIM
+`ifdef SIM_MEMORY
 initial begin
-    $dumpfile("memory.vcd");
+    $dumpfile("dump.vcd");
     $dumpvars(0, memory);
 end
 `endif

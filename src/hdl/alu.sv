@@ -26,9 +26,9 @@ always_comb begin
     endcase
 end
 
-`ifdef COCOTB_SIM
+`ifdef SIM_ALU
 initial begin
-    $dumpfile("alu.vcd");
+    $dumpfile("dump.vcd");
     $dumpvars(0, alu);
 end
 `endif
