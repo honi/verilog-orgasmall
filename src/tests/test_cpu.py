@@ -39,7 +39,6 @@ async def test_op(dut, opcode, *operands):
     assert LogicArray(dut.registers.data[1].value) == LogicArray(expected, Range(WORD_SIZE-1, 'downto', 0))
 
 
-
 @cocotb.test()
 async def test_add(dut):
     await test_op(dut, ADD, 1, 2)
@@ -119,6 +118,19 @@ async def test_load_store_reg(dut):
     ])
     assert dut.data_memory.data[addr].value == data
     assert dut.registers.data[3].value == data
+
+@cocotb.test()
+async def test_jmp(dut):
+    await run_program(dut, [
+        encode(INC, rx=1),
+        encode(JMP, imm=6),
+        encode(INC, rx=1),
+        encode(INC, rx=1),
+        encode(INC, rx=1),
+        encode(INC, rx=1),
+        encode(INC, rx=1),
+    ])
+    assert dut.registers.data[1].value == 2
 
 
 if __name__ == "__main__":

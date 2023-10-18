@@ -95,7 +95,10 @@ always @ (posedge clk or posedge rst) begin
     if (rst) begin
         pc = 0;
     end else begin
-        pc = pc + 1;
+        case (opcode)
+            JMP: pc = imm;
+            default: pc = pc + 1;
+        endcase
     end
 end
 
