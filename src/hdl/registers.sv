@@ -1,6 +1,8 @@
+`include "config.sv"
+
 module registers #(
-    parameter longint WORD_SIZE = 16,
-    parameter longint COUNT = 32,
+    parameter longint WORD_SIZE = `WORD_SIZE,
+    parameter longint COUNT = `NUM_REGISTERS,
     localparam longint COUNT_BITS = $clog2(COUNT)
 )(
     input [WORD_SIZE-1:0] data_in,
@@ -35,7 +37,7 @@ assign data_out_b = data[idx_out_b];
 
 `ifdef COCOTB_SIM
 initial begin
-    $dumpfile("dump.vcd");
+    $dumpfile("registers.vcd");
     $dumpvars(0, registers);
 end
 genvar k;

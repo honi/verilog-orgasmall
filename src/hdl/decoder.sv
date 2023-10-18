@@ -1,4 +1,4 @@
-`include "../../shared/hdl/config.sv"
+`include "config.sv"
 
 module decoder (
     input [`WORD_SIZE-1:0] inst_hi,
@@ -18,7 +18,7 @@ end
 
 `ifdef COCOTB_SIM
 initial begin
-    $dumpfile("dump.vcd");
+    $dumpfile("decoder.vcd");
     $dumpvars(0, decoder);
 end
 `endif

@@ -1,12 +1,10 @@
-import sys
 import cocotb
-from cocotb.triggers import RisingEdge, Timer, ClockCycles
+from cocotb.triggers import RisingEdge, ClockCycles
 from cocotb.clock import Clock
-from cocotb.types import LogicArray, Range
 
-sys.path.append("../../shared/tests")
 from config import *
 from opcodes import *
+from runner import test_module
 
 
 async def run_program(dut, program):
@@ -104,3 +102,7 @@ async def test_set(dut):
     ])
     for i in range(NUM_REGISTERS):
         assert dut.registers.data[i].value == 100 + i
+
+
+if __name__ == "__main__":
+    test_module("cpu")

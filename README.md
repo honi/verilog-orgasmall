@@ -14,20 +14,18 @@ En este repo estoy aprendiendo Verilog e intentando armar un CPU muy básico.
 - `./scripts/setup`: Buildea un container de Docker con todas las herramientas instaladas.
 - `./scripts/shell`: Abre un shell adentro del container con `pwd` montado en `/workspace`.
 
-## Módulos
+## Estructura del proyecto
 
-- memory
-- registers
-- decoder
-- alu
-- cpu
+- `./src/hdl/<module>.sv`: Módulos en SystemVerilog.
+- `./src/tests/test_<module>.py`: Testbench para `<module>`.
+- `./src/build/<module>/`: Output de la simulación. El archivo interesante es `<module>.vcd` que contiene el wavefile.
 
 ## Testbenchs
 
 Para testear un módulo en particular:
 
 ```sh
-make test_<module>
+make <module>
 ```
 
 Para testear todos los módulos:
@@ -36,12 +34,10 @@ Para testear todos los módulos:
 make
 ```
 
-Luego de correr los tests, el wavefile se genera en `src/<module>/tests/dump.vcd`.
-
 ## Notas
 
 - Si quiero hacer un cpu single-cycle necesito si o si 2 memorias separadas (programa y datos), o una memoria dual port (2 lecturas simultáneas)?
 - Mantener el clock entre distintos test cases.
-- Compartir parámetros defaults como `WORD_SIZE`.
+- Compartir configs como `WORD_SIZE` y los opcodes entre verilog y python (DRY).
 - Tipos usados para los parámetros limitan las opciones de configuración?
-- Revisar config de cocotb, parece que es mucho más rápido correr directo desde python sin el makefile que te dan de ejemplo.
+- Mejorar el display de errores cuando se hace `make` de todos los módulos (el output es muy largo, quizás debería frenar el make si falla algún módulo).

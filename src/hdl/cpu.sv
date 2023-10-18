@@ -1,9 +1,8 @@
-`include "../../shared/hdl/config.sv"
-
-`include "../../alu/hdl/alu.sv"
-`include "../../decoder/hdl/decoder.sv"
-`include "../../memory/hdl/memory.sv"
-`include "../../registers/hdl/registers.sv"
+`include "alu.sv"
+`include "config.sv"
+`include "decoder.sv"
+`include "memory.sv"
+`include "registers.sv"
 
 module cpu (
     input rst,
@@ -114,7 +113,7 @@ end
 
 `ifdef COCOTB_SIM
 initial begin
-    $dumpfile("dump.vcd");
+    $dumpfile("cpu.vcd");
     $dumpvars(0, cpu);
 end
 `endif

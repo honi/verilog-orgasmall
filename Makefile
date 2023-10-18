@@ -1,10 +1,9 @@
-# MODULES := $(patsubst src/%,%,$(shell find src -type d -maxdepth 1))
-MODULES := memory cpu decoder registers alu
+MODULES := $(patsubst src/tests/test_%.py,%,$(shell find src/tests -name "test_*.py"))
 
 all: $(MODULES)
 
 $(MODULES):
-	./scripts/shell make -C src/$@/tests
+	./scripts/shell python3 src/tests/test_$@.py
 
 synth/%.json: src/*/hdl/%.sv
 	-mkdir synth
@@ -14,6 +13,6 @@ synth/%.svg: synth/%.json
 	./scripts/shell netlistsvg $< -o $@
 
 clean:
-	find src -name "*.vcd" -o -name "results.xml" -o -name "sim_build" -o -name "__pycache__" | xargs rm -r
+	rm -r build
 
 .PHONY: all clean $(MODULES)

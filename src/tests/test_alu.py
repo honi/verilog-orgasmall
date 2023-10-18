@@ -1,9 +1,9 @@
-import sys
 import cocotb
 from cocotb.triggers import Timer
 
-sys.path.append("../../shared/tests")
+from config import *
 from opcodes import *
+from runner import test_module
 
 
 async def test_op(dut, opcode, *operands):
@@ -12,8 +12,7 @@ async def test_op(dut, opcode, *operands):
     dut.opcode.value = opcode
     await Timer(10, "us")
     expected = OPFUNCS[opcode](*operands)
-    assert dut.out.value == expected, f"{int(dut.out.value)} != {expected}"
-
+    assert dut.out.value == expected
 
 @cocotb.test()
 async def test_add(dut):
@@ -29,11 +28,11 @@ async def test_sub(dut):
 
 @cocotb.test()
 async def test_and(dut):
-    await test_op(dut, AND, 0xFFFF, 0x1234)
+    await test_op(dut, AND, 0xFF, 0x12)
 
 @cocotb.test()
 async def test_or(dut):
-    await test_op(dut, OR, 0xF0F0, 0x0F0F)
+    await test_op(dut, OR, 0xF0, 0x0F)
 
 @cocotb.test()
 async def test_xor(dut):
@@ -41,7 +40,7 @@ async def test_xor(dut):
 
 @cocotb.test()
 async def test_cmp(dut):
-    await test_op(dut, CMP, 666, 666)
+    await test_op(dut, CMP, 100, 100)
     await test_op(dut, CMP, 1, 7)
 
 @cocotb.test()
@@ -59,3 +58,7 @@ async def test_shr(dut):
 @cocotb.test()
 async def test_shl(dut):
     await test_op(dut, SHL, 8, 2)
+
+
+if __name__ == "__main__":
+    test_module("alu")

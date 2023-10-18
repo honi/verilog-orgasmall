@@ -1,6 +1,8 @@
 import cocotb
 from cocotb.triggers import Timer
 
+from runner import test_module
+
 
 @cocotb.test()
 async def test_type_a(dut):
@@ -48,3 +50,7 @@ async def test_type_d(dut):
     assert dut.opcode.value == opcode
     assert dut.rx.value == rx
     assert dut.imm.value == imm
+
+
+if __name__ == "__main__":
+    test_module("decoder")

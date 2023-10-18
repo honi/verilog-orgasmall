@@ -1,6 +1,8 @@
+`include "config.sv"
+
 module memory #(
-    parameter longint WORD_SIZE = 16,
-    parameter longint ADDR_SIZE = 16,
+    parameter longint WORD_SIZE = `WORD_SIZE,
+    parameter longint ADDR_SIZE = `ADDR_SIZE,
     localparam longint MAX_ADDR = (1 << ADDR_SIZE) - 1
 )(
     input [WORD_SIZE-1:0] data_in,
@@ -28,7 +30,7 @@ assign data_out = data[addr];
 
 `ifdef COCOTB_SIM
 initial begin
-    $dumpfile("dump.vcd");
+    $dumpfile("memory.vcd");
     $dumpvars(0, memory);
 end
 `endif

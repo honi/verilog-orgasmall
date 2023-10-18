@@ -1,13 +1,13 @@
 import random
 import cocotb
-from cocotb.triggers import RisingEdge, FallingEdge, Timer
+from cocotb.triggers import RisingEdge
 from cocotb.clock import Clock
-from cocotb.types import LogicArray, Range
+from cocotb.types import LogicArray
+
+from config import *
+from runner import test_module
 
 
-# TODO: Compartir estos defaults con la definición de los parámetros en Verilog.
-WORD_SIZE = 16
-ADDR_SIZE = 16
 X = LogicArray("X" * WORD_SIZE)
 Z = LogicArray("Z" * WORD_SIZE)
 
@@ -48,3 +48,7 @@ async def memory_basic_test(dut):
         await RisingEdge(dut.clk)
 
         assert dut.data_out.value == data
+
+
+if __name__ == "__main__":
+    test_module("memory")

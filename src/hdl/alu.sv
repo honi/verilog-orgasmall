@@ -1,7 +1,7 @@
-`include "../../shared/hdl/config.sv"
+`include "config.sv"
 
 module alu #(
-    parameter longint WORD_SIZE = 16
+    parameter longint WORD_SIZE = `WORD_SIZE
 )(
     input [WORD_SIZE-1:0] a,
     input [WORD_SIZE-1:0] b,
@@ -28,7 +28,7 @@ end
 
 `ifdef COCOTB_SIM
 initial begin
-    $dumpfile("dump.vcd");
+    $dumpfile("alu.vcd");
     $dumpvars(0, alu);
 end
 `endif
