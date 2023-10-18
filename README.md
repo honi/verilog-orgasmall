@@ -41,3 +41,4 @@ make
 - Compartir configs como `WORD_SIZE` y los opcodes entre verilog y python (DRY).
 - Tipos usados para los parámetros limitan las opciones de configuración?
 - Mejorar el display de errores cuando se hace `make` de todos los módulos (el output es muy largo, quizás debería frenar el make si falla algún módulo).
+- Para respetar la ISA de OrgaSmall el PC debería incrementar de a 2.
