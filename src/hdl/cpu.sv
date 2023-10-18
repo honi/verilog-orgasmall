@@ -33,7 +33,6 @@ memory #(
     .WORD_SIZE(`INST_SIZE),
     .ADDR_SIZE(`ADDR_SIZE)
 ) inst_memory (
-    .data_in(0),
     .data_out(inst),
     .addr(pc),
     .en_write(1'b0), // Nunca escribimos en la memoria de instrucciones.
