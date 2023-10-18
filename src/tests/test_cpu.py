@@ -1,6 +1,7 @@
 import cocotb
 from cocotb.triggers import RisingEdge, ClockCycles
 from cocotb.clock import Clock
+from cocotb.types import LogicArray, Range
 
 from config import *
 from isa import *
@@ -35,7 +36,8 @@ async def test_op(dut, opcode, *operands):
         encode(opcode, rx=1, ry=2),
     ])
     expected = OPFUNCS[opcode](*operands)
-    assert dut.registers.data[1].value == expected, f"{int(dut.registers.data[1].value)} != {expected}"
+    assert LogicArray(dut.registers.data[1].value) == LogicArray(expected, Range(WORD_SIZE-1, 'downto', 0))
+
 
 
 @cocotb.test()
@@ -49,6 +51,7 @@ async def test_adc(dut):
 @cocotb.test()
 async def test_sub(dut):
     await test_op(dut, SUB, 5, 1)
+    await test_op(dut, SUB, 1, 5)
 
 @cocotb.test()
 async def test_and(dut):
