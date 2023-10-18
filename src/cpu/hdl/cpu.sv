@@ -45,6 +45,7 @@ memory #(
 decoder decoder (
     .inst_hi(inst[`INST_SIZE-1:`WORD_SIZE]),
     .inst_lo(inst[`WORD_SIZE-1:0]),
+    // .inst(inst),
     .opcode(opcode),
     .rx(idx_rx),
     .ry(idx_ry),

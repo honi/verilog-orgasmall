@@ -1,11 +1,5 @@
+import sys
 from os import path
-
-
-OPCODES = {}
-with open(path.join(path.dirname(__file__), "../opcodes.gtkw")) as f:
-    for line in f.readlines():
-        opcode, opname = line.strip().split(" ")
-        OPCODES[opname] = int(opcode, 2)
 
 
 def op_ADD(x, y): return x + y
@@ -19,3 +13,12 @@ def op_INC(x): return x + 1
 def op_DEC(x): return x - 1
 def op_SHR(x, y): return x >> y
 def op_SHL(x, y): return x << y
+
+
+OPFUNCS = {}
+with open(path.join(path.dirname(__file__), "../opcodes.gtkw")) as f:
+    for line in f.readlines():
+        opcode, opname = line.strip().split(" ")
+        opcode = int(opcode, 2)
+        globals()[opname] = opcode
+        OPFUNCS[opcode] = OPFUNCS[opname] = getattr(sys.modules[__name__], f"op_{opname}", None)
