@@ -3,7 +3,7 @@ from cocotb.triggers import RisingEdge, ClockCycles
 from cocotb.clock import Clock
 
 from config import *
-from opcodes import *
+from isa import *
 from runner import test_module
 
 
@@ -26,17 +26,6 @@ async def run_program(dut, program):
     # Single-cycle for the win!
     # Necesitamos len(program) ciclos para ejecutar todo el programa.
     await ClockCycles(dut.clk, len(program))
-
-
-def encode(opcode, rx=None, ry=None, imm=None):
-    inst_hi = opcode << 3
-    inst_lo = 0
-
-    if rx is not None: inst_hi |= rx
-    if ry is not None: inst_lo |= ry << 5
-    if imm is not None: inst_lo = imm
-
-    return (inst_hi << 8) | inst_lo
 
 
 async def test_op(dut, opcode, *operands):

@@ -45,3 +45,13 @@ OPFUNCS = {
     SHR: op_SHR,
     SHL: op_SHL,
 }
+
+def encode(opcode, rx=None, ry=None, imm=None):
+    inst_hi = opcode << 3
+    inst_lo = 0
+
+    if rx is not None: inst_hi |= rx
+    if ry is not None: inst_lo |= ry << 5
+    if imm is not None: inst_lo = imm
+
+    return (inst_hi << 8) | inst_lo

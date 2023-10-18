@@ -1,4 +1,3 @@
-import math
 import cocotb
 from cocotb.triggers import RisingEdge
 from cocotb.clock import Clock

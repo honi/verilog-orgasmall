@@ -2,7 +2,7 @@ import cocotb
 from cocotb.triggers import Timer
 
 from config import *
-from opcodes import *
+from isa import *
 from runner import test_module
 
 

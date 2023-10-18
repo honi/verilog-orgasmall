@@ -1,55 +1,42 @@
 import cocotb
 from cocotb.triggers import Timer
 
+from isa import *
 from runner import test_module
 
 
 @cocotb.test()
 async def test_type_a(dut):
-    opcode = 13
-    rx = 2
-    ry = 3
-    dut.inst_hi.value = (opcode << 3) | rx
-    dut.inst_lo.value = ry << 5
+    dut.inst.value = encode(ADD, rx=1, ry=2)
     await Timer(1, "us")
-    assert dut.opcode.value == opcode
-    assert dut.rx.value == rx
-    assert dut.ry.value == ry
+    assert dut.opcode.value == ADD
+    assert dut.rx.value == 1
+    assert dut.ry.value == 2
 
 
 @cocotb.test()
 async def test_type_b(dut):
-    opcode = 6
-    rx = 7
-    dut.inst_hi.value = (opcode << 3) | rx
-    dut.inst_lo.value = 0
+    dut.inst.value = encode(INC, rx=1)
     await Timer(1, "us")
-    assert dut.opcode.value == opcode
-    assert dut.rx.value == rx
+    assert dut.opcode.value == INC
+    assert dut.rx.value == 1
 
 
 @cocotb.test()
 async def test_type_c(dut):
-    opcode = 1
-    imm = 255
-    dut.inst_hi.value = opcode << 3
-    dut.inst_lo.value = imm
+    dut.inst.value = encode(JMP, imm=0xAA)
     await Timer(1, "us")
-    assert dut.opcode.value == opcode
-    assert dut.imm.value == imm
+    assert dut.opcode.value == JMP
+    assert dut.imm.value == 0xAA
 
 
 @cocotb.test()
 async def test_type_d(dut):
-    opcode = 0b11111
-    rx = 0
-    imm = 0xAA
-    dut.inst_hi.value = (opcode << 3) | rx
-    dut.inst_lo.value = imm
+    dut.inst.value = encode(SET, rx=1, imm=0xAA)
     await Timer(1, "us")
-    assert dut.opcode.value == opcode
-    assert dut.rx.value == rx
-    assert dut.imm.value == imm
+    assert dut.opcode.value == SET
+    assert dut.rx.value == 1
+    assert dut.imm.value == 0xAA
 
 
 if __name__ == "__main__":
