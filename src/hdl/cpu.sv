@@ -138,6 +138,9 @@ always_comb begin
 
         // Register ops
         MOV: begin // Rx <- Ry
+            registers_data_in = ry;
+            registers_idx_write = idx_rx;
+            registers_en_write = 1;
         end
         SET: begin // Rx <- M
             registers_data_in = imm;

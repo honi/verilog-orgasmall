@@ -104,6 +104,14 @@ async def test_set(dut):
         assert dut.registers.data[i].value == 100 + i
 
 @cocotb.test()
+async def test_mov(dut):
+    await run_program(dut, [
+        encode(SET, rx=1, imm=42),
+        encode(MOV, rx=2, ry=1),
+    ])
+    assert dut.registers.data[2].value == 42
+
+@cocotb.test()
 async def test_load_store_imm(dut):
     addr = 0x0F
     data = 42
