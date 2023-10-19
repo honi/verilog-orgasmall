@@ -11,6 +11,7 @@ module cpu (
 
 // Program counter.
 reg [`ADDR_SIZE-1:0] pc;
+localparam integer PC_INC = 1;
 
 // Instrucción decodificada.
 wire [`INST_SIZE-1:0] inst;
@@ -23,6 +24,9 @@ wire [`WORD_SIZE-1:0] rx;
 wire [`WORD_SIZE-1:0] ry;
 wire [`WORD_SIZE-1:0] imm;
 wire [`WORD_SIZE-1:0] alu_out;
+wire alu_flag_c;
+wire alu_flag_z;
+wire alu_flag_n;
 wire [`WORD_SIZE-1:0] data_memory_out;
 reg [`WORD_SIZE-1:0] registers_data_in;
 reg [`REGISTER_BITS-1:0] registers_idx_write;
@@ -30,6 +34,9 @@ reg [`WORD_SIZE-1:0] data_memory_data_in;
 reg [`ADDR_SIZE-1:0] data_memory_addr;
 reg registers_en_write;
 reg data_memory_en_write;
+reg flag_c;
+reg flag_z;
+reg flag_n;
 
 // Instruction memory (readonly): contiene las instrucciones del programa en ejecución.
 memory #(
@@ -83,10 +90,13 @@ registers #(
 alu #(
     .WORD_SIZE(`WORD_SIZE)
 ) alu (
+    .opcode(opcode),
     .a(rx),
     .b(ry),
     .out(alu_out),
-    .opcode(opcode)
+    .flag_c(alu_flag_c),
+    .flag_z(alu_flag_z),
+    .flag_n(alu_flag_n)
 );
 
 // TODO: Qué tipo de always habría que usar acá?
@@ -94,10 +104,16 @@ alu #(
 always @ (posedge clk or posedge rst) begin
     if (rst) begin
         pc = 0;
+        flag_c = 0;
+        flag_z = 0;
+        flag_n = 0;
     end else begin
         case (opcode)
             JMP: pc = imm;
-            default: pc = pc + 1;
+            JC: pc = flag_c ? imm : pc + PC_INC;
+            JZ: pc = flag_z ? imm : pc + PC_INC;
+            JN: pc = flag_n ? imm : pc + PC_INC;
+            default: pc = pc + PC_INC;
         endcase
     end
 end
@@ -118,10 +134,9 @@ always_comb begin
             registers_data_in = alu_out;
             registers_idx_write = idx_rx;
             registers_en_write = 1;
-        end
-
-        // Jumps
-        JMP, JC, JZ, JN: begin
+            flag_c = alu_flag_c;
+            flag_z = alu_flag_z;
+            flag_n = alu_flag_n;
         end
 
         // Load/Store ops

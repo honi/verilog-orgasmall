@@ -42,3 +42,4 @@ make
 - Tipos usados para los parámetros limitan las opciones de configuración?
 - Mejorar el display de errores cuando se hace `make` de todos los módulos (el output es muy largo, quizás debería frenar el make si falla algún módulo).
 - Para respetar la ISA de OrgaSmall el PC debería incrementar de a 2.
+- Los flags tienen que persistir si la op no modifica flags. Revisar ADC.

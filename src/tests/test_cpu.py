@@ -132,6 +132,45 @@ async def test_jmp(dut):
     ])
     assert dut.registers.data[1].value == 2
 
+@cocotb.test()
+async def test_jc(dut):
+    await run_program(dut, [
+        encode(SET, rx=1, imm=0xFF),
+        encode(SET, rx=2, imm=1),
+        encode(ADD, rx=1, ry=2),
+        encode(JC, imm=6),
+        encode(SET, rx=3, imm=1),
+        encode(JMP, imm=0),
+        encode(SET, rx=3, imm=42),
+    ])
+    assert dut.registers.data[3].value == 42
+
+@cocotb.test()
+async def test_jz(dut):
+    await run_program(dut, [
+        encode(SET, rx=1, imm=32),
+        encode(SET, rx=2, imm=32),
+        encode(SUB, rx=1, ry=2),
+        encode(JZ, imm=6),
+        encode(SET, rx=3, imm=1),
+        encode(JMP, imm=0),
+        encode(SET, rx=3, imm=42),
+    ])
+    assert dut.registers.data[3].value == 42
+
+@cocotb.test()
+async def test_jn(dut):
+    await run_program(dut, [
+        encode(SET, rx=1, imm=8),
+        encode(SET, rx=2, imm=32),
+        encode(SUB, rx=1, ry=2),
+        encode(JN, imm=6),
+        encode(SET, rx=3, imm=1),
+        encode(JMP, imm=0),
+        encode(SET, rx=3, imm=42),
+    ])
+    assert dut.registers.data[3].value == 42
+
 
 if __name__ == "__main__":
     test_module("cpu")
