@@ -24,9 +24,10 @@ wire [`WORD_SIZE-1:0] rx;
 wire [`WORD_SIZE-1:0] ry;
 wire [`WORD_SIZE-1:0] imm;
 wire [`WORD_SIZE-1:0] alu_out;
-wire alu_flag_c;
-wire alu_flag_z;
-wire alu_flag_n;
+reg flag_c;
+reg flag_z;
+reg flag_n;
+reg carry_in;
 wire [`WORD_SIZE-1:0] data_memory_out;
 reg [`WORD_SIZE-1:0] registers_data_in;
 reg [`REGISTER_BITS-1:0] registers_idx_write;
@@ -34,9 +35,6 @@ reg [`WORD_SIZE-1:0] data_memory_data_in;
 reg [`ADDR_SIZE-1:0] data_memory_addr;
 reg registers_en_write;
 reg data_memory_en_write;
-reg flag_c;
-reg flag_z;
-reg flag_n;
 
 // Instruction memory (readonly): contiene las instrucciones del programa en ejecución.
 memory #(
@@ -93,10 +91,11 @@ alu #(
     .opcode(opcode),
     .a(rx),
     .b(ry),
+    .carry_in(carry_in),
     .out(alu_out),
-    .flag_c(alu_flag_c),
-    .flag_z(alu_flag_z),
-    .flag_n(alu_flag_n)
+    .flag_c(flag_c),
+    .flag_z(flag_z),
+    .flag_n(flag_n)
 );
 
 // TODO: Qué tipo de always habría que usar acá?
@@ -104,9 +103,7 @@ alu #(
 always @ (posedge clk or posedge rst) begin
     if (rst) begin
         pc = 0;
-        flag_c = 0;
-        flag_z = 0;
-        flag_n = 0;
+        carry_in = 0;
     end else begin
         case (opcode)
             JMP: pc = imm;
@@ -115,6 +112,9 @@ always @ (posedge clk or posedge rst) begin
             JN: pc = flag_n ? imm : pc + PC_INC;
             default: pc = pc + PC_INC;
         endcase
+        // TODO: Actualizamos el flag de carry 1 vez por ciclo.
+        // Por alguna razón ALU.always_comb se dispara 2 veces por ciclo y se pierde el carry.
+        carry_in = flag_c;
     end
 end
 
@@ -130,21 +130,22 @@ always_comb begin
 
     case (opcode)
         // ALU ops
-        ADD, ADC, SUB, AND, OR, XOR, CMP, MOV, INC, DEC, SHR, SHL: begin
+        ADD, ADC, SUB, AND, OR, XOR, CMP, INC, DEC, SHR, SHL: begin
             registers_data_in = alu_out;
             registers_idx_write = idx_rx;
             registers_en_write = 1;
-            flag_c = alu_flag_c;
-            flag_z = alu_flag_z;
-            flag_n = alu_flag_n;
         end
 
-        // Load/Store ops
+        // Register ops
+        MOV: begin // Rx <- Ry
+        end
         SET: begin // Rx <- M
             registers_data_in = imm;
             registers_idx_write = idx_rx;
             registers_en_write = 1;
         end
+
+        // Load/Store ops
         STR: begin // Mem[M] <- Rx
             data_memory_data_in = rx;
             data_memory_addr = imm;

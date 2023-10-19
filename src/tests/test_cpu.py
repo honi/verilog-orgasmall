@@ -45,7 +45,16 @@ async def test_add(dut):
 
 @cocotb.test()
 async def test_adc(dut):
-    await test_op(dut, ADC, 1, 2)
+    await run_program(dut, [
+        encode(SET, rx=1, imm=0xFF),
+        encode(SET, rx=2, imm=0x01),
+        encode(ADD, rx=1, ry=2),
+        encode(SHL, rx=2, imm=3),
+        encode(SET, rx=1, imm=0x01),
+        encode(SET, rx=2, imm=0x01),
+        encode(ADC, rx=1, ry=2),
+    ])
+    assert dut.registers.data[1].value == 3
 
 @cocotb.test()
 async def test_sub(dut):
@@ -140,7 +149,7 @@ async def test_jc(dut):
         encode(ADD, rx=1, ry=2),
         encode(JC, imm=6),
         encode(SET, rx=3, imm=1),
-        encode(JMP, imm=0),
+        encode(JMP, imm=5),
         encode(SET, rx=3, imm=42),
     ])
     assert dut.registers.data[3].value == 42
@@ -153,7 +162,7 @@ async def test_jz(dut):
         encode(SUB, rx=1, ry=2),
         encode(JZ, imm=6),
         encode(SET, rx=3, imm=1),
-        encode(JMP, imm=0),
+        encode(JMP, imm=5),
         encode(SET, rx=3, imm=42),
     ])
     assert dut.registers.data[3].value == 42
@@ -166,7 +175,7 @@ async def test_jn(dut):
         encode(SUB, rx=1, ry=2),
         encode(JN, imm=6),
         encode(SET, rx=3, imm=1),
-        encode(JMP, imm=0),
+        encode(JMP, imm=5),
         encode(SET, rx=3, imm=42),
     ])
     assert dut.registers.data[3].value == 42

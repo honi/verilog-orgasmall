@@ -6,16 +6,24 @@ module alu #(
     input opcode_t opcode,
     input [WORD_SIZE-1:0] a,
     input [WORD_SIZE-1:0] b,
+    input carry_in,
     output logic [WORD_SIZE-1:0] out, // TODO: reg o logic?
-    output logic flag_c,
-    output logic flag_z,
-    output logic flag_n
+    output reg flag_c,
+    output reg flag_z,
+    output reg flag_n
 );
+
+initial begin
+    out = 0;
+    flag_c = 0;
+    flag_z = 0;
+    flag_n = 0;
+end
 
 always_comb begin
     case (opcode)
         ADD: {flag_c, out} = a + b;
-        ADC: {flag_c, out} = a + b + flag_c;
+        ADC: {flag_c, out} = a + b + carry_in;
         SUB: {flag_c, out} = a - b;
         AND: out = a & b;
         OR: out = a | b;
@@ -25,16 +33,14 @@ always_comb begin
         DEC: out = a - 1;
         SHR: out = a >> b;
         SHL: out = a << b;
-        default: begin
-            out = 0;
-            flag_c = 0;
-        end
+        default: out = 0;
     endcase
     case (opcode)
-        AND, OR, XOR, CMP, INC, DEC, SHR, SHL: flag_c = 0;
+        AND, ADC, SUB, AND, OR, XOR, CMP: begin
+            flag_z = out == 0;
+            flag_n = out[WORD_SIZE-1] == 1;
+        end
     endcase
-    flag_z = out == 0;
-    flag_n = out[WORD_SIZE-1] == 1;
 end
 
 `ifdef SIM_ALU
