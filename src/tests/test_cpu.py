@@ -1,33 +1,12 @@
 import cocotb
-from cocotb.triggers import RisingEdge, ClockCycles
-from cocotb.clock import Clock
 from cocotb.types import LogicArray, Range
 
 from config import *
 from isa import *
-from runner import test_module
+from runner import test_module, run_program
 
 
-async def run_program(dut, program, cycles=None):
-    # Cargamos el programa en memoria.
-    for addr in range (1 << ADDR_SIZE):
-        dut.inst_memory.data[addr].value = program[addr] if addr < len(program) else 0
-
-    # Configuramos el clock y nos sincronizamos.
-    clock = Clock(dut.clk, 10, "us")
-    cocotb.start_soon(clock.start(start_high=False))
-
-    # Reset cycle.
-    dut.rst.value = 1
-    await RisingEdge(dut.clk)
-    dut.rst.value = 0
-    await RisingEdge(dut.clk)
-
-    # Single-cycle for the win!
-    # Necesitamos len(program) ciclos para ejecutar todo el programa.
-    # TODO: Sumamos 1 ciclo más en caso de que la última instrucción sea un store a memoria?
-    await ClockCycles(dut.clk, len(program) if cycles is None else cycles)
-
+# TODO: Usar assemble_program() y definir los test cases en archivos asm?
 
 async def test_op(dut, opcode, *operands):
     await run_program(dut, [
@@ -187,18 +166,6 @@ async def test_jn(dut):
         encode(SET, rx=3, imm=42),
     ])
     assert dut.registers.data[3].value == 42
-
-@cocotb.test()
-async def test_e2e_1(dut):
-    await run_program(dut, [
-        encode(JMP, imm=1),
-        encode(SET, rx=0, imm=0xFF),
-        encode(SET, rx=1, imm=0x11),
-        encode(ADD, rx=0, ry=1),
-        encode(JC, imm=3),
-        encode(JMP, imm=5),
-    ], 12)
-    assert dut.registers.data[0].value == 0x21
 
 
 if __name__ == "__main__":

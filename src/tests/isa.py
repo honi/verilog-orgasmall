@@ -20,6 +20,30 @@ SHR = 0b11010
 SHL = 0b11011
 SET = 0b11111
 
+INSTRUCTIONS = {
+    "ADD": {"opcode": ADD, "type": "A"},
+    "ADC": {"opcode": ADC, "type": "A"},
+    "SUB": {"opcode": SUB, "type": "A"},
+    "AND": {"opcode": AND, "type": "A"},
+    "OR": {"opcode": OR, "type": "A"},
+    "XOR": {"opcode": XOR, "type": "A"},
+    "CMP": {"opcode": CMP, "type": "A"},
+    "MOV": {"opcode": MOV, "type": "A"},
+    "STR": {"opcode": STR, "type": "D"},
+    "LOAD": {"opcode": LOAD, "type": "D"},
+    "RSTR": {"opcode": RSTR, "type": "A"},
+    "RLOAD": {"opcode": RLOAD, "type": "A"},
+    "JMP": {"opcode": JMP, "type": "C"},
+    "JC": {"opcode": JC, "type": "C"},
+    "JZ": {"opcode": JZ, "type": "C"},
+    "JN": {"opcode": JN, "type": "C"},
+    "INC": {"opcode": INC, "type": "B"},
+    "DEC": {"opcode": DEC, "type": "B"},
+    "SHR": {"opcode": SHR, "type": "A"},
+    "SHL": {"opcode": SHL, "type": "A"},
+    "SET": {"opcode": SET, "type": "D"},
+}
+
 def op_ADD(x, y): return x + y
 def op_ADC(x, y): return x + y
 def op_SUB(x, y): return x - y
