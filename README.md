@@ -1,4 +1,4 @@
-# Verilog
+# Verilog: OrgaSmall
 
 En este repo estoy aprendiendo Verilog e intentando armar un CPU single-cycle muy básico basado en la [ISA de OrgaSmall](docs/orgaSmall_datasheet.pdf).
 
