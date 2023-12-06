@@ -15,7 +15,7 @@ async def test_loop1(dut):
 async def test_array_sum(dut):
     program = assemble_program("array_sum.asm")
     await run_program(dut, program, 36)
-    assert dut.registers.data[3].value == 1 + 2 + 3 + 4
+    assert dut.registers.data[1].value == 1 + 2 + 3 + 4
 
 
 if __name__ == "__main__":
