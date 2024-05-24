@@ -22,18 +22,12 @@ async def test_add(dut):
 
 @cocotb.test()
 async def test_adc(dut):
-    dut.a.value = 0xFF
-    dut.b.value = 1
-    dut.opcode.value = ADD
-    await Timer(10, "us")
-    assert dut.out.value == 0
-    assert dut.flag_c == 1
-
+    dut.carry_in = 1
     dut.a.value = 1
     dut.b.value = 1
     dut.opcode.value = ADC
     await Timer(10, "us")
-    assert dut.out.value == 3
+    assert dut.out == 3
     assert dut.flag_c == 0
 
 @cocotb.test()
@@ -83,14 +77,14 @@ async def test_flag_c(dut):
     dut.b.value = 1
     dut.opcode.value = ADD
     await Timer(10, "us")
-    assert dut.out.value == 0
+    assert dut.out == 0
     assert dut.flag_c == 1
 
     dut.a.value = 0
     dut.b.value = 1
     dut.opcode.value = SUB
     await Timer(10, "us")
-    assert dut.out.value == 0xFF
+    assert dut.out == 0xFF
     assert dut.flag_c == 1
 
 @cocotb.test()

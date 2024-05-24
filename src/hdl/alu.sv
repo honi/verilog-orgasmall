@@ -36,7 +36,7 @@ always_comb begin
         default: out = 0;
     endcase
     case (opcode)
-        AND, ADC, SUB, AND, OR, XOR, CMP: begin
+        ADD, ADC, SUB, AND, OR, XOR, CMP: begin
             flag_z = out == 0;
             flag_n = out[WORD_SIZE-1] == 1;
         end
